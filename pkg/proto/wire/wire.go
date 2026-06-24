@@ -38,7 +38,7 @@ const (
 	MessageCodecJSON           = "json"
 	DefaultMaxFramePayloadSize = 64 * 1024
 
-	MagicV2 = "FRP\x00\x02\r\n"
+	MagicV2 = "XFR\x03\x04\r\n"
 )
 
 type Frame struct {
