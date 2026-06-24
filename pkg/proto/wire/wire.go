@@ -26,19 +26,19 @@ import (
 )
 
 const (
-	ProtocolV1 = "v1"
-	ProtocolV2 = "v2"
+	ProtocolV1 = "p1"
+	ProtocolV2 = "p2"
 
-	WireVersionV2 = 2
+	WireVersionV2 = 100
 
-	FrameTypeClientHello uint16 = 1
-	FrameTypeServerHello uint16 = 2
-	FrameTypeMessage     uint16 = 16
+	FrameTypeClientHello uint16 = 256
+	FrameTypeServerHello uint16 = 257
+	FrameTypeMessage     uint16 = 512
 
-	MessageCodecJSON           = "json"
+	MessageCodecJSON           = "js"
 	DefaultMaxFramePayloadSize = 64 * 1024
 
-	MagicV2 = "XFR\x03\x04\r\n"
+	MagicV2 = "\xAB\xCD\xEF\x12\x34\x56\x78\x90"
 )
 
 type Frame struct {
@@ -166,47 +166,47 @@ func CheckMagic(conn net.Conn) (out net.Conn, isV2 bool, err error) {
 }
 
 type BootstrapInfo struct {
-	Transport string `json:"transport,omitempty"`
-	TLS       bool   `json:"tls,omitempty"`
-	TCPMux    bool   `json:"tcpMux,omitempty"`
+	Transport string `json:"x,omitempty"`
+	TLS       bool   `json:"y,omitempty"`
+	TCPMux    bool   `json:"z,omitempty"`
 }
 
 type ClientHello struct {
-	Bootstrap    BootstrapInfo      `json:"bootstrap,omitempty"`
-	Capabilities ClientCapabilities `json:"capabilities,omitempty"`
+	Bootstrap    BootstrapInfo      `json:"a,omitempty"`
+	Capabilities ClientCapabilities `json:"b,omitempty"`
 }
 
 type ClientCapabilities struct {
-	Message MessageCapabilities `json:"message,omitempty"`
-	Crypto  CryptoCapabilities  `json:"crypto,omitempty"`
+	Message MessageCapabilities `json:"c,omitempty"`
+	Crypto  CryptoCapabilities  `json:"d,omitempty"`
 }
 
 type MessageCapabilities struct {
-	Codecs []string `json:"codecs,omitempty"`
+	Codecs []string `json:"e,omitempty"`
 }
 
 type CryptoCapabilities struct {
-	Algorithms   []string `json:"algorithms,omitempty"`
-	ClientRandom []byte   `json:"clientRandom,omitempty"`
+	Algorithms   []string `json:"f,omitempty"`
+	ClientRandom []byte   `json:"g,omitempty"`
 }
 
 type ServerHello struct {
-	Selected ServerSelection `json:"selected,omitempty"`
-	Error    string          `json:"error,omitempty"`
+	Selected ServerSelection `json:"h,omitempty"`
+	Error    string          `json:"i,omitempty"`
 }
 
 type ServerSelection struct {
-	Message MessageSelection `json:"message,omitempty"`
-	Crypto  CryptoSelection  `json:"crypto,omitempty"`
+	Message MessageSelection `json:"j,omitempty"`
+	Crypto  CryptoSelection  `json:"k,omitempty"`
 }
 
 type MessageSelection struct {
-	Codec string `json:"codec,omitempty"`
+	Codec string `json:"l,omitempty"`
 }
 
 type CryptoSelection struct {
-	Algorithm    string `json:"algorithm,omitempty"`
-	ServerRandom []byte `json:"serverRandom,omitempty"`
+	Algorithm    string `json:"m,omitempty"`
+	ServerRandom []byte `json:"n,omitempty"`
 }
 
 func clientHelloWithCryptoRandom(bootstrap BootstrapInfo, clientRandom []byte) ClientHello {
