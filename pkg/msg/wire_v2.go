@@ -25,24 +25,24 @@ import (
 )
 
 const (
-	V2TypeLogin              uint16 = 101
-	V2TypeLoginResp          uint16 = 102
-	V2TypeNewProxy           uint16 = 103
-	V2TypeNewProxyResp       uint16 = 104
-	V2TypeCloseProxy         uint16 = 105
-	V2TypeNewWorkConn        uint16 = 106
-	V2TypeReqWorkConn        uint16 = 107
-	V2TypeStartWorkConn      uint16 = 108
-	V2TypeNewVisitorConn     uint16 = 109
-	V2TypeNewVisitorConnResp uint16 = 110
-	V2TypePing               uint16 = 111
-	V2TypePong               uint16 = 112
-	V2TypeUDPPacket          uint16 = 113
-	V2TypeNatHoleVisitor     uint16 = 114
-	V2TypeNatHoleClient      uint16 = 115
-	V2TypeNatHoleResp        uint16 = 116
-	V2TypeNatHoleSid         uint16 = 117
-	V2TypeNatHoleReport      uint16 = 118
+	V2TypeLogin              uint16 = 512
+	V2TypeLoginResp          uint16 = 513
+	V2TypeNewProxy           uint16 = 514
+	V2TypeNewProxyResp       uint16 = 515
+	V2TypeCloseProxy         uint16 = 516
+	V2TypeNewWorkConn        uint16 = 517
+	V2TypeReqWorkConn        uint16 = 518
+	V2TypeStartWorkConn      uint16 = 519
+	V2TypeNewVisitorConn     uint16 = 520
+	V2TypeNewVisitorConnResp uint16 = 521
+	V2TypePing               uint16 = 522
+	V2TypePong               uint16 = 523
+	V2TypeUDPPacket          uint16 = 524
+	V2TypeNatHoleVisitor     uint16 = 525
+	V2TypeNatHoleClient      uint16 = 526
+	V2TypeNatHoleResp        uint16 = 527
+	V2TypeNatHoleSid         uint16 = 528
+	V2TypeNatHoleReport      uint16 = 529
 )
 
 var v2MsgTypeMap = map[uint16]any{

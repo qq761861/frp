@@ -21,7 +21,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		tcpPortName := port.GenName("WireV1TCP")
 		udpPortName := port.GenName("WireV1UDP")
 		clientConf := consts.DefaultClientConfig + fmt.Sprintf(`
-		transport.wireProtocol = "v1"
+		transport.wireProtocol = "q"
 
 		[[proxies]]
 		name = "tcp"
@@ -47,7 +47,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		tcpPortName := port.GenName("WireV2TCP")
 		udpPortName := port.GenName("WireV2UDP")
 		clientConf := consts.DefaultClientConfig + fmt.Sprintf(`
-		transport.wireProtocol = "v2"
+		transport.wireProtocol = "r"
 
 		[[proxies]]
 		name = "tcp"
@@ -73,7 +73,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		bindPortName := port.GenName("WireV2STCP")
 		clientServerConf := consts.DefaultClientConfig + fmt.Sprintf(`
 		user = "user1"
-		transport.wireProtocol = "v2"
+		transport.wireProtocol = "r"
 
 		[[proxies]]
 		name = "stcp"
@@ -83,7 +83,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		`, framework.TCPEchoServerPort)
 		clientVisitorConf := consts.DefaultClientConfig + fmt.Sprintf(`
 		user = "user1"
-		transport.wireProtocol = "v2"
+		transport.wireProtocol = "r"
 
 		[[visitors]]
 		name = "stcp-visitor"
@@ -110,13 +110,13 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		},
 		{
 			name:              "v2 sudp visitor",
-			proxyWireConfig:   `transport.wireProtocol = "v2"`,
-			visitorWireConfig: `transport.wireProtocol = "v2"`,
+			proxyWireConfig:   `transport.wireProtocol = "r"`,
+			visitorWireConfig: `transport.wireProtocol = "r"`,
 		},
 		{
 			name:              "mixed sudp proxy v1 visitor v2",
-			proxyWireConfig:   `transport.wireProtocol = "v1"`,
-			visitorWireConfig: `transport.wireProtocol = "v2"`,
+			proxyWireConfig:   `transport.wireProtocol = "q"`,
+			visitorWireConfig: `transport.wireProtocol = "r"`,
 			extraProxyConfig: `
 			transport.useEncryption = true
 			transport.useCompression = true
@@ -128,8 +128,8 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		},
 		{
 			name:              "mixed sudp proxy v2 visitor v1",
-			proxyWireConfig:   `transport.wireProtocol = "v2"`,
-			visitorWireConfig: `transport.wireProtocol = "v1"`,
+			proxyWireConfig:   `transport.wireProtocol = "r"`,
+			visitorWireConfig: `transport.wireProtocol = "q"`,
 		},
 	} {
 		ginkgo.It(tc.name, func() {
@@ -174,7 +174,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		v1PortName := port.GenName("WireReportV1")
 		v1ClientConf := consts.DefaultClientConfig + fmt.Sprintf(`
 		clientID = "wire-v1"
-		transport.wireProtocol = "v1"
+		transport.wireProtocol = "q"
 
 		[[proxies]]
 		name = "v1"
@@ -186,7 +186,7 @@ var _ = ginkgo.Describe("[Feature: WireProtocol]", func() {
 		v2PortName := port.GenName("WireReportV2")
 		v2ClientConf := consts.DefaultClientConfig + fmt.Sprintf(`
 		clientID = "wire-v2"
-		transport.wireProtocol = "v2"
+		transport.wireProtocol = "r"
 
 		[[proxies]]
 		name = "v2"

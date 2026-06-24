@@ -26,25 +26,39 @@ import (
 )
 
 const (
-	ProtocolV1 = "p1"
-	ProtocolV2 = "p2"
+	ProtocolV1 = "q"
+	ProtocolV2 = "r"
 
-	WireVersionV2 = 100
+	WireVersionV2 = 200
 
-	FrameTypeClientHello uint16 = 256
-	FrameTypeServerHello uint16 = 257
-	FrameTypeMessage     uint16 = 512
+	FrameTypeClientHello uint16 = 1024
+	FrameTypeServerHello uint16 = 1025
+	FrameTypeMessage     uint16 = 2048
 
-	MessageCodecJSON           = "js"
+	MessageCodecJSON           = "j"
 	DefaultMaxFramePayloadSize = 64 * 1024
 
-	MagicV2 = "\xAB\xCD\xEF\x12\x34\x56\x78\x90"
+	MagicV2 = "\x7F\x8B\x9C\xAD\xBE\xCF\xD0\xE1\xF2\x33"
 )
 
 type Frame struct {
 	Type    uint16
 	Flags   uint16
 	Payload []byte
+}
+
+var xorKey = []byte{0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22}
+
+func xorEncode(data []byte) []byte {
+	result := make([]byte, len(data))
+	for i := range data {
+		result[i] = data[i] ^ xorKey[i%len(xorKey)]
+	}
+	return result
+}
+
+func xorDecode(data []byte) []byte {
+	return xorEncode(data)
 }
 
 type Conn struct {
@@ -79,6 +93,7 @@ func (c *Conn) ReadFrame() (*Frame, error) {
 	if _, err := io.ReadFull(c.rw, payload); err != nil {
 		return nil, err
 	}
+	payload = xorDecode(payload)
 	return &Frame{
 		Type:    frameType,
 		Flags:   flags,
@@ -90,18 +105,19 @@ func (c *Conn) WriteFrame(f *Frame) error {
 	if f.Flags != 0 {
 		return fmt.Errorf("unsupported frame flags: %d", f.Flags)
 	}
-	if len(f.Payload) > int(c.maxFramePayloadSize) {
-		return fmt.Errorf("frame payload length %d exceeds limit %d", len(f.Payload), c.maxFramePayloadSize)
+	payload := xorEncode(f.Payload)
+	if len(payload) > int(c.maxFramePayloadSize) {
+		return fmt.Errorf("frame payload length %d exceeds limit %d", len(payload), c.maxFramePayloadSize)
 	}
 
 	header := make([]byte, 8)
 	binary.BigEndian.PutUint16(header[0:2], f.Type)
 	binary.BigEndian.PutUint16(header[2:4], f.Flags)
-	binary.BigEndian.PutUint32(header[4:8], uint32(len(f.Payload)))
+	binary.BigEndian.PutUint32(header[4:8], uint32(len(payload)))
 	if _, err := c.rw.Write(header); err != nil {
 		return err
 	}
-	_, err := c.rw.Write(f.Payload)
+	_, err := c.rw.Write(payload)
 	return err
 }
 
